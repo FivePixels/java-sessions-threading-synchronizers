@@ -72,18 +72,15 @@ public class FutureBasicsTest {
 
     private Future<Stream<String>> downloadingContentFromURL(final String url) {
         ExecutorService cachedThreadPool = Executors.newCachedThreadPool();
-        return cachedThreadPool.submit(new Callable<Stream<String>>() {
-            @Override
-            public Stream<String> call() throws Exception {
-                URL netUrl = new URL(url);
-                URLConnection urlConnection = netUrl.openConnection();
-                BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(
-                                urlConnection.getInputStream()));
-                return reader
-                        .lines()
-                        .flatMap(x -> Arrays.stream(x.split(" ")));
-            }
+        return cachedThreadPool.submit(() -> {
+            URL netUrl = new URL(url);
+            URLConnection urlConnection = netUrl.openConnection();
+            BufferedReader reader = new BufferedReader(
+                new InputStreamReader(
+                    urlConnection.getInputStream()));
+            return reader
+                .lines()
+                .flatMap(x -> Arrays.stream(x.split(" ")));
         });
     }
 
