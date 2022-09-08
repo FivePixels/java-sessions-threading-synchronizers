@@ -2,12 +2,14 @@ package com.evolutionnext.concurrency.staticlock;
 
 class Account {
     private int amount;
+
     public Account() {
     }
+
     //The static makes the class become the lock
     public void deposit(int amount) {
         synchronized (Account.class) {
-            System.out.format("Thread %s, Amount: %d%n", Thread.currentThread().getName(), amount);
+            System.out.format("Thread %s, Amount: %d%n", Thread.currentThread(), amount);
             this.amount = amount;
             try {
                 Thread.sleep(5000);
@@ -17,8 +19,10 @@ class Account {
         }
     }
 
-    public synchronized int getAmount() {
-        return amount;
+    public int getAmount() {
+        synchronized (Account.class) {
+            return amount;
+        }
     }
 
     public static void main(String[] args) {
